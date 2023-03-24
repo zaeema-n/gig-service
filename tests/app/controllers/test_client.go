@@ -8,7 +8,7 @@ import (
 ServerUrl - Set the GIG server API url here for crawlers
 */
 const (
-	ServerUrl = "http://localhost:9003/"
+	ServerUrl = "http://localhost:9000/"
 )
 
 var testClient = client.GigClient{
