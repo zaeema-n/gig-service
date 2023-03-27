@@ -2,8 +2,9 @@ package entity_operations
 
 import (
 	"GIG/app/repositories"
-	"github.com/lsflk/gig-sdk/models"
 	"log"
+
+	"github.com/lsflk/gig-sdk/models"
 )
 
 func HandleEntityTermination(entity models.Entity) {
@@ -16,17 +17,18 @@ func HandleEntityTermination(entity models.Entity) {
 		if err != nil {
 			log.Println(err)
 		}
-	}
 
-	entities, err := repositories.EntityRepository{}.GetEntities(entity.GetTitle(), entity.GetCategories(), 0, 0)
-	if err != nil {
-		log.Println(err)
-	}
-
-	for _, result := range entities {
-		err = repositories.EntityRepository{}.TerminateEntity(result, entity.GetSource(), entity.GetSourceDate())
+	} else {
+		entities, err := repositories.EntityRepository{}.GetEntities(entity.GetTitle(), entity.GetCategories(), 0, 0)
 		if err != nil {
 			log.Println(err)
+		}
+
+		for _, result := range entities {
+			err = repositories.EntityRepository{}.TerminateEntity(result, entity.GetSource(), entity.GetSourceDate())
+			if err != nil {
+				log.Println(err)
+			}
 		}
 	}
 }

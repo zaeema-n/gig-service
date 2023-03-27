@@ -50,7 +50,7 @@ func (e EntityManager) CheckEntityCompatibility(existingEntity models.Entity, en
 			existingEntity.AddCategories(entity.GetCategories())
 			// merge attributes
 			for name := range entity.GetAttributes() {
-				if name != "new_title" && name != "title" {
+				if name != "new_title" && name != "titles" {
 					entityAttribute, _ := entity.GetAttribute(name)
 					existingEntity.SetAttribute(name, entityAttribute.GetValue())
 				}

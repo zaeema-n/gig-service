@@ -5,12 +5,13 @@ import (
 	"GIG/app/databases/mongodb_official"
 	"GIG/app/repositories/constants"
 	"GIG/app/repositories/interfaces"
+	"log"
+	"time"
+
 	"github.com/lsflk/gig-sdk/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
-	"time"
 )
 
 type EntityRepository struct {
@@ -57,7 +58,7 @@ func (e EntityRepository) GetEntityByPreviousTitle(title string, date time.Time)
 
 	c := e.newEntityCollection()
 	findOptions := options.FindOne().
-		SetSort(bson.D{{"attributes.titles.values.date", -1}})
+		SetSort(bson.D{{"attributes.titles.values.date", -1}}).SetSort(bson.D{{"attributes.titles.values.updated_at", -1}})
 	return entity, c.FindOne(mongodb_official.Context, query, findOptions).Decode(&entity)
 }
 

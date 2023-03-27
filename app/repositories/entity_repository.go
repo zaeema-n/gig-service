@@ -6,12 +6,13 @@ import (
 	"GIG/app/repositories/interfaces"
 	"GIG/app/utilities/managers"
 	"errors"
-	"github.com/lsflk/gig-sdk/enums/ValueType"
-	"github.com/lsflk/gig-sdk/libraries"
-	"github.com/lsflk/gig-sdk/models"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/lsflk/gig-sdk/enums/ValueType"
+	"github.com/lsflk/gig-sdk/libraries"
+	"github.com/lsflk/gig-sdk/models"
 )
 
 type EntityRepository struct {
@@ -28,7 +29,7 @@ func (e EntityRepository) AddEntity(entity models.Entity) (models.Entity, error)
 	}
 	entity.SetSnippet()
 	entity, normalizedTitle := e.normalizeEntity(entity)
-	existingEntity, err := e.getExistingEntity(entity)
+	existingEntity, err := e.getExistingEntity(entity, normalizedTitle)
 	entityIsCompatible, existingEntity := managers.EntityManager{}.CheckEntityCompatibility(existingEntity, entity)
 
 	// if existing entity found
@@ -186,10 +187,10 @@ func (e EntityRepository) NormalizeEntityTitle(entityTitle string) (string, erro
 	//	isNormalized, normalizedTitle = functions.SearchNormalizationInLocationSearchAPI(entityTitle)
 	//}
 
-	if isNormalized {
-		log.Println("entity name normalized:", entityTitle, "->", normalizedTitle)
-		return normalizedTitle, nil
-	}
+	// if isNormalized {
+	// 	log.Println("entity name normalized:", entityTitle, "->", normalizedTitle)
+	// 	return normalizedTitle, nil
+	// }
 
 	return entityTitle, errors.New(error_messages.NormalizationFailedError + " unable to find a match")
 }
@@ -224,11 +225,19 @@ func (e EntityRepository) updateExistingEntity(entity models.Entity, existingEnt
 	return existingEntity, repositoryHandler.entityRepository.UpdateEntity(existingEntity)
 }
 
-func (e EntityRepository) getExistingEntity(entity models.Entity) (models.Entity, error) {
-	if entity.GetSourceDate().IsZero() {
-		return e.GetEntityBy("title", entity.GetTitle())
+func (e EntityRepository) getExistingEntity(entity models.Entity, normalizedTitle string) (models.Entity, error) {
+	if normalizedTitle == "" {
+		if entity.GetSourceDate().IsZero() {
+			return e.GetEntityBy("title", entity.GetTitle())
+		}
+		return e.GetEntityByPreviousTitle(entity.GetTitle(), entity.GetSourceDate())
+	} else {
+		if entity.GetSourceDate().IsZero() {
+			return e.GetEntityBy("title", normalizedTitle)
+		}
+		return e.GetEntityByPreviousTitle(normalizedTitle, entity.GetSourceDate())
 	}
-	return e.GetEntityByPreviousTitle(entity.GetTitle(), entity.GetSourceDate())
+
 }
 
 func (e EntityRepository) normalizeEntity(entity models.Entity) (models.Entity, string) {
@@ -238,10 +247,12 @@ func (e EntityRepository) normalizeEntity(entity models.Entity) (models.Entity, 
 		return entity, entityTitle
 	}
 	entityTitle, normalizationErr := EntityRepository{}.NormalizeEntityTitle(entity.GetTitle())
+
 	if normalizationErr == nil {
 		return entity, entityTitle
 	}
 	entity.AddCategory("arbitrary-entities")
+
 	log.Println(error_messages.NormalizationFailedError, normalizationErr)
 	return entity, entityTitle
 }

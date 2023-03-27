@@ -45,7 +45,7 @@ func (e EntityRepository) GetEntityByPreviousTitle(title string, date time.Time)
 	c := e.newEntityCollection()
 	defer c.Close()
 
-	err = c.Collection.Find(query).Sort("-attributes.titles.values.date").One(&entity)
+	err = c.Collection.Find(query).Sort("-attributes.titles.values.date", "-attributes.titles.values.updated_at").One(&entity)
 	return entity, err
 }
 
