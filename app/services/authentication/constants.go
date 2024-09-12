@@ -4,7 +4,7 @@ var AdminControllers = []string{"UserController"}
 
 const (
 	AuthHeaderName   = "Authorization"
-	ApiKeyHeaderName = "ApiKey"
+	ApiKeyHeaderName = "Apikey"
 	ApiKey           = "apikey"
 	Bearer           = "bearer"
 	Email            = "email"
