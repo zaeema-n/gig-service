@@ -238,7 +238,7 @@ definitions:
         x-go-name: ValueType
     type: object
     x-go-package: github.com/lsflk/gig-sdk/models
-host: api.gig.datafoundation.lk/api
+host: api.gig.datafoundation.lk
 info:
   contact:
     email: umayangag@opensource.lk
@@ -248,7 +248,7 @@ info:
   title: General Information Graph - API
   version: 2.0.0
 paths:
-  /add:
+  /api/add:
     post:
       description: This API allows to create/ modify a new/ existing entity
       operationId: addUser
@@ -280,7 +280,7 @@ paths:
       summary: Create Entity
       tags:
       - Entity
-  /add-batch:
+  /api/add-batch:
     post:
       description: This API allows to create/ modify a new/ set of entities
       operationId: add-batch
@@ -314,7 +314,7 @@ paths:
       summary: Create a Set of Entities
       tags:
       - Entity
-  /delete:
+  /api/delete:
     post:
       description: This API allows to delete existing entity
       operationId: delete
@@ -346,7 +346,7 @@ paths:
       summary: Delete Entity
       tags:
       - Entity
-  /get/{title}:
+  /api/get/{title}:
     get:
       description: This API allows key word searching to retrieve list of entities
       operationId: show
@@ -359,7 +359,7 @@ paths:
       - description: date to search the title for eg. 2006-01-02
         in: query
         name: date
-        type: date
+        type: string
       - collectionFormat: csv
         description: list of attributes to filter/ return all attributes if not provided
         in: query
@@ -428,7 +428,7 @@ paths:
       summary: Retrieve a file from the server
       tags:
       - File
-  /links/{title}:
+  /api/links/{title}:
     get:
       description: |-
         This API allows retrieving list of linked entities for a given entity title
@@ -477,7 +477,7 @@ paths:
       summary: Get Linked Entities
       tags:
       - Entity
-  /normalize:
+  /api/normalize:
     get:
       description: This API allows to normalize a given entity title
       operationId: normalize
@@ -505,7 +505,7 @@ paths:
       summary: Normalize a given entity title
       tags:
       - Normalizer
-  /normalize/location:
+  /api/normalize/location:
     get:
       description: This API allows to normalize a given location name
       operationId: normalize-location
@@ -533,7 +533,7 @@ paths:
       summary: Normalize a given location name to return a standard location name
       tags:
       - Normalizer
-  /normalize/name:
+  /api/normalize/name:
     get:
       description: This API allows to normalize a given entity title
       operationId: normalize-name
@@ -561,7 +561,7 @@ paths:
       summary: Normalize a given entity title
       tags:
       - Normalizer
-  /reader/register:
+  /api/reader/register:
     post:
       description: This API allows to create/ modify a new/ existing user
       operationId: register
@@ -590,7 +590,7 @@ paths:
       summary: Create Reader
       tags:
       - User
-  /relations/{title}:
+  /api/relations/{title}:
     get:
       description: |-
         This API allows retrieving list of related entities for a given entity title
@@ -639,7 +639,7 @@ paths:
       summary: Get Related Entities
       tags:
       - Entity
-  /search:
+  /api/search:
     get:
       description: This API allows search by category and key word searching to retrieve
         list of entities
@@ -693,7 +693,7 @@ paths:
       summary: Search for entities by keywords and category
       tags:
       - Entity
-  /terminate:
+  /api/terminate:
     post:
       description: |-
         This API allows to terminate the lifetime of an existing entity. Include entity title to terminate specific entity or include categories to terminate set of entities by category.
@@ -727,7 +727,7 @@ paths:
       summary: Terminate Entities
       tags:
       - Entity
-  /token/validate:
+  /api/token/validate:
     get:
       description: This API allows to validate a token
       operationId: validate
@@ -752,7 +752,7 @@ paths:
       summary: Authenticate Validation of User
       tags:
       - User
-  /update:
+  /api/update:
     post:
       description: This API allows to modify existing entity
       operationId: update
@@ -784,7 +784,7 @@ paths:
       summary: Update Entity
       tags:
       - Entity
-  /upload:
+  /api/upload:
     post:
       description: This API allows to upload a file to the server from a remote source
         url
@@ -817,7 +817,47 @@ paths:
       summary: Upload File
       tags:
       - File
-  /user/add:
+  /api/graph:
+    get:
+      description: This API returns graph data for visualization.
+      operationId: GetGraph
+      summary: Get the graph data
+      tags:
+      - Graph
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: graph data returned successfully
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+              additionalProperties:
+                type: integer
+        "500":
+          description: server error
+          schema:
+            "$ref": "#/definitions/Response"
+  /api/status:
+    get:
+      description: This API returns statistics of the entities in the system, including various aggregated data.
+      operationId: GetStats
+      summary: Get stats
+      tags:
+      - Dashboard
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: statistics retrieved successfully
+          schema:
+            "$ref": "#/definitions/Response"
+        "500":
+          description: server error
+          schema:
+            "$ref": "#/definitions/Response"
+  /api/user/add:
     post:
       description: This API allows to create/ modify a new/ existing user
       operationId: add
@@ -848,7 +888,7 @@ paths:
       summary: Create User
       tags:
       - User
-  /user/login:
+  /api/user/login:
     post:
       description: This API allows to authenticate an user
       operationId: login
