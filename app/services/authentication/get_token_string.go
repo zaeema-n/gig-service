@@ -12,13 +12,6 @@ func getTokenString(header *revel.RevelHeader, headerName string) (tokenString s
 	if authHeader == "" {
 		return "", errors.New(error_messages.AuthHeaderNotFound)
 	}
-
-	// tokenSlice := strings.Split(authHeader, " ")
-	// if len(tokenSlice) != 2 {
-	// 	return "", errors.New(error_messages.InvalidTokenFormat)
-	// }
-	// tokenString = tokenSlice[1]
-	// log.Println(tokenSlice)
 	return authHeader, nil
 
 }

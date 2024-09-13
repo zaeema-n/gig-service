@@ -33,8 +33,6 @@ func Authenticate(c *revel.Controller) revel.Result {
 		return nil
 	}
 
-	log.Println("Paasing ApiKey validation and failed")
-
 	if err != nil { // if Bearer token doesn't exist
 		log.Println(error_messages.TokenApiKeyFailed)
 
@@ -53,12 +51,6 @@ func Authenticate(c *revel.Controller) revel.Result {
 }
 
 func GetAuthUser(header *revel.RevelHeader) (models.User, string, error) {
-	log.Println("Request Headers:")
-	log.Println(header.Server.GetKeys())
-	for _, key := range header.Server.GetKeys() {
-		values := header.Get(key)
-		log.Printf("%s: %v", key, values)
-	}
 	tokenString, err := getTokenString(header, AuthHeaderName)
 	apiKey, keyErr := getTokenString(header, ApiKeyHeaderName)
 
