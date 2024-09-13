@@ -1,31 +1,31 @@
 // Package classification General Information Graph - API
 //
-// General Information Graph API Documentation
+// # General Information Graph API Documentation
 //
 // Terms Of Service:
 // there are no TOS at this moment, use at your own risk we take no responsibility
 //
-//     Schemes: https, http
-//     Host: api.gig.datafoundation.lk/api
-//     BasePath:
-//     Version: 2.0.0
-//     Contact: umayangag@opensource.lk
+//	    Schemes: https, http
+//	    Host: api.gig.datafoundation.lk/api
+//	    BasePath:
+//	    Version: 2.0.0
+//	    Contact: umayangag@opensource.lk
 //
-//     Consumes:
-//     - application/json
+//	    Consumes:
+//	    - application/json
 //
-//     Produces:
-//     - application/json
+//	    Produces:
+//	    - application/json
 //
-//	   SecurityDefinitions:
-//       Bearer:
-//         type: apiKey
-//         name: Authorization
-//         in: header
-//       ApiKey:
-//         type: apiKey
-//         name: ApiKey
-//         in: header
+//		   SecurityDefinitions:
+//	      Bearer:
+//	        type: apiKey
+//	        name: Authorization
+//	        in: header
+//	      ApiKey:
+//	        type: apiKey
+//	        name: ApiKey
+//	        in: header
 //
 // swagger:meta
 package app
@@ -36,10 +36,12 @@ import (
 	"GIG/app/repositories"
 	"GIG/app/storages"
 	"GIG/app/utilities/normalizers"
-	"github.com/revel/config"
-	"github.com/revel/revel"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/revel/config"
+	"github.com/revel/revel"
 )
 
 var (
@@ -100,6 +102,21 @@ func init() {
 	if err != nil || Config == nil {
 		log.Fatalf("%+v", err)
 	}
+
+	revel.OnAppStart(func() {
+		if mongoPath := os.Getenv("MONGO_PATH"); mongoPath != "" {
+			revel.Config.SetOption("mongo.path", mongoPath)
+		}
+		if minIoEndpoint := os.Getenv("MINIO_ENDPOINT"); minIoEndpoint != "" {
+			revel.Config.SetOption("minio.endpoint", minIoEndpoint)
+		}
+		if minIoAccessKeyID := os.Getenv("MINIO_ACCESS_KEY_ID"); minIoAccessKeyID != "" {
+			revel.Config.SetOption("minio.accessKeyID", minIoAccessKeyID)
+		}
+		if minIoSecretAccessKey := os.Getenv("MINIO_SECRET_ACCESS_KEY"); minIoSecretAccessKey != "" {
+			revel.Config.SetOption("minio.secretAccessKey", minIoSecretAccessKey)
+		}
+	})
 
 	revel.OnAppStart(databases.LoadDatabaseHandler)
 	revel.OnAppStart(storages.LoadStorageHandler)
