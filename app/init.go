@@ -36,6 +36,7 @@ import (
 	"GIG/app/repositories"
 	"GIG/app/storages"
 	"GIG/app/utilities/normalizers"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -106,17 +107,36 @@ func init() {
 	revel.OnAppStart(func() {
 		if mongoPath := os.Getenv("MONGO_PATH"); mongoPath != "" {
 			revel.Config.SetOption("mongo.path", mongoPath)
+			fmt.Printf("MONGO_PATH: %s\n", mongoPath)
+		} else {
+			fmt.Println("MONGO_PATH not set")
 		}
+
 		if minIoEndpoint := os.Getenv("MINIO_ENDPOINT"); minIoEndpoint != "" {
 			revel.Config.SetOption("minio.endpoint", minIoEndpoint)
+			fmt.Printf("MINIO_ENDPOINT: %s\n", minIoEndpoint)
+		} else {
+			fmt.Println("MINIO_ENDPOINT not set")
 		}
+
 		if minIoAccessKeyID := os.Getenv("MINIO_ACCESS_KEY_ID"); minIoAccessKeyID != "" {
 			revel.Config.SetOption("minio.accessKeyID", minIoAccessKeyID)
+			fmt.Printf("MINIO_ACCESS_KEY_ID: %s\n", minIoAccessKeyID)
+		} else {
+			fmt.Println("MINIO_ACCESS_KEY_ID not set")
 		}
+
 		if minIoSecretAccessKey := os.Getenv("MINIO_SECRET_ACCESS_KEY"); minIoSecretAccessKey != "" {
 			revel.Config.SetOption("minio.secretAccessKey", minIoSecretAccessKey)
+			fmt.Printf("MINIO_SECRET_ACCESS_KEY: %s\n", minIoSecretAccessKey)
+		} else {
+			fmt.Println("MINIO_SECRET_ACCESS_KEY not set")
 		}
 	})
+	// log.Println(revel.Config.String("minio.endpoint"))
+	// log.Println(revel.Config.String("minio.accessKeyID"))
+	// log.Println(revel.Config.String("minio.secretAccessKey"))
+	// log.Println(revel.Config.String("mongo.path"))
 
 	revel.OnAppStart(databases.LoadDatabaseHandler)
 	revel.OnAppStart(storages.LoadStorageHandler)
