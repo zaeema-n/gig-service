@@ -19,3 +19,4 @@ conf/app.example.conf
 
 GIG.tar.gz
 conf/app.secret.conf
+.env
